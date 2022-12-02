@@ -8,6 +8,6 @@ proc-macro = true
 
 [dependencies]
 # todo: remove "extra-traits" feature from syn upon piblish.
-syn = { version = "1.0.103", features = ["full", "extra-traits", "visit"] }
-quote = "1.0.21"
-proc-macro2 = "1.0.47"
+syn = { version = "1.0", features = ["full", "extra-traits", "visit"] }
+quote = "1.0"
+proc-macro2 = "1.0"
