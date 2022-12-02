@@ -5,13 +5,13 @@ use syn::visit::Visit;
 use syn::{parse_macro_input, Pat, PatIdent};
 
 #[derive(Default, Debug)]
-struct VisitPatIdent {
-    idents: Vec<Ident>,
+struct VisitPatIdent<'a> {
+    idents: Vec<&'a Ident>,
 }
 
-impl<'ast> Visit<'ast> for VisitPatIdent {
+impl<'ast> Visit<'ast> for VisitPatIdent<'ast> {
     fn visit_pat_ident(&mut self, node: &'ast PatIdent) {
-        self.idents.push(node.ident.clone());
+        self.idents.push(&node.ident);
         syn::visit::visit_pat_ident(self, node)
     }
 }
