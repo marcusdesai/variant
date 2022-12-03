@@ -33,7 +33,7 @@ pub fn extract_variant_assign(input: TokenStream) -> TokenStream {
     visitor.visit_pat(&input);
 
     if let Some(tokens) = visitor.pat_or {
-        let msg = "`variant` does not support `or` patterns";
+        let msg = "`variant` cannot match `or` patterns";
         let err = Error::new_spanned(tokens, msg).to_compile_error();
         return TokenStream::from(err);
     }
