@@ -11,7 +11,11 @@ struct VisitPatIdent<'a> {
 
 impl<'ast> Visit<'ast> for VisitPatIdent<'ast> {
     fn visit_pat_ident(&mut self, node: &'ast PatIdent) {
-        self.idents.push(&node.ident);
+        // Since `None` cannot be distinguish from an ident, we check for and
+        // ignore it here.
+        if node.ident != "None" {
+            self.idents.push(&node.ident);
+        }
         syn::visit::visit_pat_ident(self, node)
     }
 }
