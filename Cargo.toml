@@ -7,10 +7,10 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/marcusdesai/variant"
 homepage = "https://github.com/marcusdesai/variant"
 description = "Destructure expressions into, and return assignments from, a single pattern."
-#keywords = ["multiset", "data-structure", "collection", "simd", "stack"]
-#categories = ["data-structures"]
+keywords = ["pattern-match", "macro"]
+categories = ["rust-patterns"]
 readme = "README.md"
-#documentation = "https://docs.rs/extract-variant"
+documentation = "https://docs.rs/extract-variant"
 autotests = false
 
 [lib]
