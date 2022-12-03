@@ -4,7 +4,7 @@ macro_rules! variant {
         match $expression {
             $pattern $(if $guard)? => Ok(extract_impl::extract_variant_assign!($pattern)),
             _ => {
-                let msg = "variant does not match".into();
+                let msg = "pattern does not match, or guard not satisfied".into();
                 core::result::Result::<_, std::boxed::Box<dyn std::error::Error>>::Err(msg)
             }
         }

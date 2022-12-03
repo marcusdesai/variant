@@ -1,0 +1,5 @@
+error: `variant` does not support `or` patterns
+  --> tests/or_pattern.rs:10:40
+   |
+10 |     let _ = variant!(val, Test { a, b: Some(1) | Some(2) });
+   |                                        ^^^^^^^^^^^^^^^^^
