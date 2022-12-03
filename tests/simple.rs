@@ -15,7 +15,8 @@ fn main() {
     assert!(a_err.is_err());
 
     let val_b = Test::B(true);
-    let b = variant!(val_b, Test::B(b)).expect("b");
+    let err = Box::<dyn Error>::from("err");
+    let b = variant!(val_b, Test::B(b), err).expect("b");
     assert_eq!(b, true);
 
     let err_closure = || Box::<dyn Error>::from("err");

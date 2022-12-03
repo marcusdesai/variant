@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! variant {
-    ($expression:expr, $pattern:pat_param $(if $guard: expr)?) => {
+    ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
         match $expression {
             $pattern $(if $guard)? => {
                 core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
@@ -11,7 +11,7 @@ macro_rules! variant {
             }
         }
     };
-    ($expression:expr, $pattern:pat_param $(if $guard: expr)?, $err:expr) => {
+    ($expression:expr, $pattern:pat_param $(if $guard:expr)?, $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
                 core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
@@ -20,7 +20,7 @@ macro_rules! variant {
         }
     };
     // `err` is callable with no parameters.
-    ($expression:expr, $pattern:pat_param $(if $guard: expr)?, else $err:expr) => {
+    ($expression:expr, $pattern:pat_param $(if $guard:expr)?, else $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
                 core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
