@@ -4,7 +4,8 @@ macro_rules! variant {
         match $exp {
             $pat => Ok(extract_impl::extract_variant_assign!($pat)),
             _ => {
-                core::result::Result::<_, std::boxed::Box<dyn std::error::Error>>::Err("err".into())
+                let msg = "variant does not match".into();
+                core::result::Result::<_, std::boxed::Box<dyn std::error::Error>>::Err(msg)
             }
         }
     };
