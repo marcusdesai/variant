@@ -1,3 +1,5 @@
+//! Internal lib for [variant](https://docs.rs/extract-variant).
+
 use proc_macro::TokenStream;
 use proc_macro2::Ident;
 use quote::{quote, ToTokens};
