@@ -6,6 +6,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/marcusdesai/variant"
 homepage = "https://github.com/marcusdesai/variant"
+description = "Internal lib for https://docs.rs/extract-variant"
 
 [lib]
 proc-macro = true
