@@ -70,7 +70,7 @@ macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
+                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
             }
             _ => {
                 let msg = "pattern does not match, or guard not satisfied".into();
@@ -81,7 +81,7 @@ macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?, $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
+                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
             }
             _ => core::result::Result::Err($err),
         }
@@ -90,7 +90,7 @@ macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?, else $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_impl::extract_variant_assign!($pattern))
+                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
             }
             _ => core::result::Result::Err($err()),
         }
