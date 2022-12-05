@@ -7,7 +7,7 @@ This small crate exports a single macro `variant!`, which can be used to destruc
 
 This macro is mainly useful for reducing matching boilerplate when you just want to try and extract some values from a pattern match (my reason for making this 😉).
 
-## Examples
+## Example
 
 ```rust
 use variant::variant;
