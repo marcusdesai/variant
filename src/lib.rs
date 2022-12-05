@@ -95,12 +95,20 @@
 //! [unit]: https://doc.rust-lang.org/std/primitive.unit.html
 //! [matches]: https://doc.rust-lang.org/std/macro.matches.html
 
+// Not public API.
+#[doc(hidden)]
+pub mod __private {
+    // Ensures `extract_variant_assign` is callable regardless of where
+    // `variant` is called.
+    pub use extract_variant_internal::extract_variant_assign;
+}
+
 #[macro_export]
 macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
+                core::result::Result::Ok($crate::__private::extract_variant_assign!($pattern))
             }
             _ => {
                 let msg = "pattern does not match, or guard not satisfied".into();
@@ -111,7 +119,7 @@ macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?, $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
+                core::result::Result::Ok($crate::__private::extract_variant_assign!($pattern))
             }
             _ => core::result::Result::Err($err),
         }
@@ -120,7 +128,7 @@ macro_rules! variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?, else $err:expr) => {
         match $expression {
             $pattern $(if $guard)? => {
-                core::result::Result::Ok(extract_variant_internal::extract_variant_assign!($pattern))
+                core::result::Result::Ok($crate::__private::extract_variant_assign!($pattern))
             }
             _ => core::result::Result::Err($err()),
         }
