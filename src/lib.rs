@@ -40,7 +40,7 @@
 //!
 //! ## Multiple Assignments
 //!
-//! When there is more than one assignments within a matching pattern all
+//! When there is more than one assignment within a matching pattern all
 //! assignments are returned in a tuple. Since assignments in a pattern may not
 //! be ordered linearly, when there are multiple assignments they will be
 //! returned in lexicographic order.
