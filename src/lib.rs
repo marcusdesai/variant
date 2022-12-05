@@ -3,7 +3,7 @@
 //! matches, then the [`Ok`](`core::result::Result::Ok`) branch is returned
 //! including any assignments from the pattern (or [`unit`] if none are given).
 //! If the match fails then [`Err`](`core::result::Result::Err`) is returned
-//! with either a given error, or defaulting to `Box<dyn std::error::Error>`
+//! with either a given error, or a default `Box<dyn std::error::Error>`
 //! otherwise.
 //!
 //! ## Simple Example
@@ -76,6 +76,11 @@
 //! // We can also use an error returning closure with the following syntax
 //! let err_closure = || MyError::Expensive;
 //! let res = variant!(val, Some(50), else err_closure);
+//! assert!(matches!(res, Err(MyError::Expensive)));
+//!
+//! // Doesn't have to be a closure, any callable taking no parameters will do
+//! fn make_err() -> MyError { MyError::Expensive }
+//! let res = variant!(val, Some(50), else make_err);
 //! assert!(matches!(res, Err(MyError::Expensive)));
 //! ```
 //!
