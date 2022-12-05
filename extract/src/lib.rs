@@ -1,4 +1,4 @@
-//! Internal lib for [variant](https://docs.rs/extract-variant).
+//! Internal lib for [variant](https://crates.io/crates/extract-variant).
 
 use proc_macro::TokenStream;
 use proc_macro2::Ident;
@@ -40,6 +40,7 @@ pub fn extract_variant_assign(input: TokenStream) -> TokenStream {
         return TokenStream::from(err);
     }
 
+    visitor.idents.sort_unstable();
     let tokens = match visitor.idents.as_slice() {
         [id] => quote! {
             #id

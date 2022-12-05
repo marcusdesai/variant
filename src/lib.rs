@@ -38,6 +38,21 @@
 //! assert!(res.is_err());
 //! ```
 //!
+//! ## Multiple Assignments
+//!
+//! When there is more than one assignments within a matching pattern all
+//! assignments are returned in a tuple. Since assignments in a pattern may not
+//! be ordered linearly, when there are multiple assignments they will be
+//! returned in lexicographic order.
+//!
+//! ```
+//! use variant::variant;
+//!
+//! let val = (Some(10), Some(true));
+//! let (a, b) = variant!(val, (Some(b), Some(a))).expect("tuple");
+//! assert_eq!((a, b), (true, 10));
+//! ```
+//!
 //! ## Custom Errors
 //!
 //! ```
@@ -61,6 +76,14 @@
 //! let res = variant!(val, Some(50), else || MyError::Expensive);
 //! assert!(matches!(res, Err(MyError::Expensive)));
 //! ```
+//!
+//! ## Or Patterns
+//!
+//! The [`variant`](`variant`) macro does not support `Or` patterns at any
+//! level. Since there is no simple expected way to signal to the user what
+//! values are returned in the case where only some assignments may match. If a
+//! pragmatic solution to this problem is found then adding this feature in the
+//! future may be possible.
 //!
 //! [unit]: https://doc.rust-lang.org/std/primitive.unit.html
 //! [matches]: https://doc.rust-lang.org/std/macro.matches.html

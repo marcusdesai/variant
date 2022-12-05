@@ -20,4 +20,10 @@ fn main() {
     assert!(res.is_err());
 
     let _: () = variant!(val, Foo { a: Bar::B(_), .. }).expect("unit");
+
+    // multiple extracted idents are lexicographically ordered in the resultant
+    // tuple, regardless of where these assignments appear in the pattern.
+    let val = Foo { a: Bar::B(true), b: Some(10) };
+    let (a, b) = variant!(val, Foo { a: Bar::B(b), b: Some(a) }).expect("(a, b)");
+    assert_eq!((a, b), (10, true));
 }
