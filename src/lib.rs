@@ -1,22 +1,33 @@
-//! The [`variant`](`variant`) macro matches an expression against a given
-//! pattern returning a [`Result`](`core::result::Result`). If the pattern
+//! The [`try_variant`](`try_variant`) macro matches an expression against a
+//! given pattern returning a [`Result`](`core::result::Result`). If the pattern
 //! matches, then the [`Ok`](`core::result::Result::Ok`) branch is returned
 //! including any assignments from the pattern (or [`unit`] if none are given).
 //! If the match fails then [`Err`](`core::result::Result::Err`) is returned
 //! with either a given error, or a default `Box<dyn std::error::Error>`
 //! otherwise.
 //!
+//! The [`get_variant`](`get_variant`) macro works in exactly the same way,
+//! except it returns [`Some`](`core::option::Option::Some`) if the pattern
+//! matches and [`None`](`core::option::Option::None`), otherwise.
+//!
 //! ## Simple Example
 //!
 //! ```
-//! use variant::variant;
+//! use variant::{get_variant, try_variant};
 //!
 //! let val = Some((0, 1));
-//! let res = variant!(val, Some((i, _))).expect("i");
+//! let res = try_variant!(val, Some((i, _))).expect("i");
 //! assert_eq!(res, 0);
 //!
-//! let res = variant!(val, Some((10, j)));
+//! let res = try_variant!(val, Some((10, j)));
 //! assert!(res.is_err());
+//!
+//! // Using get_variant instead
+//! let opt = get_variant!(val, Some((i, _)));
+//! assert_eq!(opt, Some(0));
+//!
+//! let opt = get_variant!(val, Some((10, j)));
+//! assert_eq!(opt, None);
 //! ```
 //!
 //! ## Guards
@@ -24,7 +35,7 @@
 //! Conditional guards work the same as with [`matches!`][matches].
 //!
 //! ```
-//! use variant::variant;
+//! use variant::try_variant;
 //!
 //! struct Foo {
 //!     a: usize,
@@ -32,10 +43,10 @@
 //! }
 //!
 //! let val = Foo { a: 20, b: None };
-//! let res = variant!(val, Foo { a, .. } if a == 20).expect("a");
+//! let res = try_variant!(val, Foo { a, .. } if a == 20).expect("a");
 //! assert_eq!(res, 20);
 //!
-//! let res = variant!(val, Foo { b, .. } if b.is_some());
+//! let res = try_variant!(val, Foo { b, .. } if b.is_some());
 //! assert!(res.is_err());
 //! ```
 //!
@@ -47,17 +58,17 @@
 //! order.
 //!
 //! ```
-//! use variant::variant;
+//! use variant::try_variant;
 //!
 //! let val = (Some(10), Some(true));
-//! let (a, b) = variant!(val, (Some(b), Some(a))).expect("tuple");
+//! let (a, b) = try_variant!(val, (Some(b), Some(a))).expect("tuple");
 //! assert_eq!((a, b), (true, 10));
 //! ```
 //!
 //! ## Custom Errors
 //!
 //! ```
-//! use variant::variant;
+//! use variant::try_variant;
 //!
 //! #[derive(Debug)]
 //! enum MyError {
@@ -67,30 +78,29 @@
 //! }
 //!
 //! let val = Some(1);
-//! let res = variant!(val, Some(i), MyError::Bad).expect("i");
+//! let res = try_variant!(val, Some(i), MyError::Bad).expect("i");
 //! assert_eq!(res, 1);
 //!
-//! let res = variant!(val, Some(50), MyError::Worse);
+//! let res = try_variant!(val, Some(50), MyError::Worse);
 //! assert!(matches!(res, Err(MyError::Worse)));
 //!
 //! // We can also use an error returning closure with the following syntax
 //! let err_closure = || MyError::Expensive;
-//! let res = variant!(val, Some(50), else err_closure);
+//! let res = try_variant!(val, Some(50), else err_closure);
 //! assert!(matches!(res, Err(MyError::Expensive)));
 //!
 //! // Doesn't have to be a closure, any callable taking no parameters will do
 //! fn make_err() -> MyError { MyError::Expensive }
-//! let res = variant!(val, Some(50), else make_err);
+//! let res = try_variant!(val, Some(50), else make_err);
 //! assert!(matches!(res, Err(MyError::Expensive)));
 //! ```
 //!
 //! ## Or Patterns
 //!
-//! The [`variant`](`variant`) macro does not support `Or` patterns at any
-//! level. This is because there is no simple expected way to signal to the
-//! user what values are returned in the case where only some assignments may
-//! match. If a pragmatic solution to this problem is found then adding this
-//! feature in the future may be possible.
+//! Neither macro supports `Or` patterns at any level. This is because there is
+//! no simple expected way to signal to the user what values are returned in
+//! the case where only some assignments may match. If a pragmatic solution to
+//! this problem is found then adding this feature in the future may be possible.
 //!
 //! [unit]: https://doc.rust-lang.org/std/primitive.unit.html
 //! [matches]: https://doc.rust-lang.org/std/macro.matches.html
@@ -104,7 +114,7 @@ pub mod __private {
 }
 
 #[macro_export]
-macro_rules! variant {
+macro_rules! try_variant {
     ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
         match $expression {
             $pattern $(if $guard)? => {
@@ -131,6 +141,18 @@ macro_rules! variant {
                 core::result::Result::Ok($crate::__private::extract_variant_assign!($pattern))
             }
             _ => core::result::Result::Err($err()),
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! get_variant {
+    ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
+        match $expression {
+            $pattern $(if $guard)? => {
+                core::option::Option::Some($crate::__private::extract_variant_assign!($pattern))
+            }
+            _ => core::option::Option::None,
         }
     };
 }

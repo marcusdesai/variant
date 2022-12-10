@@ -1,4 +1,4 @@
-use variant::variant;
+use variant::try_variant;
 
 struct Test {
     a: u8,
@@ -7,5 +7,5 @@ struct Test {
 
 fn main() {
     let val = Test { a: 1, b: Some(2) };
-    let _ = variant!(val, Test { a, b: Some(1) | Some(2) });
+    let _ = try_variant!(val, Test { a, b: Some(1) | Some(2) });
 }

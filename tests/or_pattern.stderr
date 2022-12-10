@@ -1,5 +1,5 @@
 error: `variant` cannot match `or` patterns
-  --> tests/or_pattern.rs:10:40
+  --> tests/or_pattern.rs:10:44
    |
-10 |     let _ = variant!(val, Test { a, b: Some(1) | Some(2) });
-   |                                        ^^^^^^^^^^^^^^^^^
+10 |     let _ = try_variant!(val, Test { a, b: Some(1) | Some(2) });
+   |                                            ^^^^^^^^^^^^^^^^^
