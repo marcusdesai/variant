@@ -1,13 +1,13 @@
 [package]
 name = "extract-variant"
 authors = ["Marcus Desai"]
-version = "0.3.0"
+version = "1.0.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/marcusdesai/variant"
 homepage = "https://github.com/marcusdesai/variant"
 description = "Destructure expressions into, and return assignments from, a single pattern."
-keywords = ["pattern-match", "macro"]
+keywords = ["pattern-match", "macro", "variant", "enum"]
 categories = ["rust-patterns"]
 readme = "README.md"
 documentation = "https://docs.rs/extract-variant"

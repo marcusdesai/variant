@@ -10,10 +10,13 @@
 //! except it returns [`Some`](`core::option::Option::Some`) if the pattern
 //! matches and [`None`](`core::option::Option::None`), otherwise.
 //!
+//! Finally, the [`variant`](`variant`) macro also works the same way, but
+//! panics if the pattern does not match.
+//!
 //! ## Simple Example
 //!
 //! ```
-//! use variant::{get_variant, try_variant};
+//! use variant::{get_variant, try_variant, variant};
 //!
 //! let val = Some((0, 1));
 //! let res = try_variant!(val, Some((i, _))).expect("i");
@@ -28,6 +31,12 @@
 //!
 //! let opt = get_variant!(val, Some((10, j)));
 //! assert_eq!(opt, None);
+//!
+//! // Using just variant
+//! let var = variant!(val, Some((i, _)));
+//! assert_eq!(var, 0);
+//!
+//! // calling `variant!(val, Some((10, j)))` will panic.
 //! ```
 //!
 //! ## Guards
@@ -97,10 +106,11 @@
 //!
 //! ## Or Patterns
 //!
-//! Neither macro supports `Or` patterns at any level. This is because there is
-//! no simple expected way to signal to the user what values are returned in
-//! the case where only some assignments may match. If a pragmatic solution to
-//! this problem is found then adding this feature in the future may be possible.
+//! None of the macros support `Or` patterns at any level. This is because
+//! there is no simple expected way to signal to the user what values are
+//! returned in the case where only some assignments may match. If a pragmatic
+//! solution to this problem is found then adding this feature in the future
+//! may be possible.
 //!
 //! [unit]: https://doc.rust-lang.org/std/primitive.unit.html
 //! [matches]: https://doc.rust-lang.org/std/macro.matches.html
@@ -153,6 +163,18 @@ macro_rules! get_variant {
                 core::option::Option::Some($crate::__private::extract_variant_assign!($pattern))
             }
             _ => core::option::Option::None,
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! variant {
+    ($expression:expr, $pattern:pat_param $(if $guard:expr)?) => {
+        match $expression {
+            $pattern $(if $guard)? => {
+                $crate::__private::extract_variant_assign!($pattern)
+            }
+            _ => panic!("pattern does not match, or guard not satisfied"),
         }
     };
 }
